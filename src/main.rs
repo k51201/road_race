@@ -1,11 +1,12 @@
 use rusty_engine::prelude::*;
 
+const PLAYER_LABEL: &str = "player";
+const PLAYER_SPEED: f32 = 250.0;
+
 struct GameState {
     health: u8,
     lost: bool,
 }
-
-const PLAYER_LABEL: &'static str = "player";
 
 fn main() {
     let mut game = Game::new();
@@ -29,5 +30,26 @@ fn init_player(game: &mut Game<GameState>) {
 }
 
 fn game_logic(engine: &mut Engine, game_state: &mut GameState) {
-    // game logic goes here
+    let mut direction: f32 = 0.0; // 1 - going up, 0 - not moving, -1 - going down
+
+    // setting direction by the key(s) pressed
+    let keyboard_state = &engine.keyboard_state;
+    if keyboard_state.pressed(KeyCode::Up) {
+        direction += 1.0;
+    }
+    if keyboard_state.pressed(KeyCode::Down) {
+        direction -= 1.0;
+    }
+
+    // going up and down
+    let mut player = engine.sprites.get_mut(PLAYER_LABEL).unwrap();
+    player.translation.y += direction * PLAYER_SPEED * engine.delta_f32;
+    player.rotation = direction * 0.15;
+
+    // don't touch edges
+    let player_y = player.translation.y;
+    if -360.0 >= player_y || player_y >= 360.0 {
+        game_state.health = 0;
+        println!("left the road");
+    }
 }
