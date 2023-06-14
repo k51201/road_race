@@ -4,14 +4,16 @@ use rusty_engine::prelude::Sprite;
 pub mod game;
 pub mod logic;
 
-pub const PLAYER_LABEL: &str = "player";
-pub const ROAD_LINE_LABEL: &str = "roadline";
-pub const OBSTACLE_LABEL: &str = "obstacle";
-pub const HEALTH_MSG_LABEL: &str = "health_message";
-pub const GAME_OVER_LABEL: &str = "game_over";
+pub mod constants {
+    pub const PLAYER_LABEL: &str = "player";
+    pub const ROAD_LINE_LABEL: &str = "roadline";
+    pub const OBSTACLE_LABEL: &str = "obstacle";
+    pub const HEALTH_MSG_LABEL: &str = "health_message";
+    pub const GAME_OVER_LABEL: &str = "game_over";
 
-pub const PLAYER_SPEED: f32 = 250.0;
-pub const ROAD_SPEED: f32 = 400.0;
+    pub const PLAYER_SPEED: f32 = 250.0;
+    pub const ROAD_SPEED: f32 = 400.0;
+}
 
 pub struct GameState {
     pub health: u8,
