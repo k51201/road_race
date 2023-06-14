@@ -5,6 +5,7 @@ const PLAYER_LABEL: &str = "player";
 const ROAD_LINE_LABEL: &str = "roadline";
 const OBSTACLE_LABEL: &str = "obstacle";
 const HEALTH_MSG_LABEL: &str = "health_message";
+const GAME_OVER_LABEL: &str = "game_over";
 
 const PLAYER_SPEED: f32 = 250.0;
 const ROAD_SPEED: f32 = 400.0;
@@ -66,6 +67,10 @@ fn init_player(game: &mut Game<GameState>) {
 }
 
 fn game_logic(engine: &mut Engine, game_state: &mut GameState) {
+    if game_state.lost {
+        return;
+    }
+
     let mut direction: f32 = 0.0; // 1 - going up, 0 - not moving, -1 - going down
 
     // setting direction by the key(s) pressed
@@ -122,4 +127,13 @@ fn game_logic(engine: &mut Engine, game_state: &mut GameState) {
                 engine.audio_manager.play_sfx(SfxPreset::Impact2, 0.6);
             }
         });
+
+    // game over
+    if game_state.health == 0 {
+        game_state.lost = true;
+        let game_over = engine.add_text(GAME_OVER_LABEL, "GAME OVER");
+        game_over.font_size = 128.0;
+        engine.audio_manager.stop_music();
+        engine.audio_manager.play_sfx(SfxPreset::Jingle3, 0.6);
+    }
 }
