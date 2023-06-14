@@ -4,6 +4,7 @@ use rusty_engine::prelude::*;
 const PLAYER_LABEL: &str = "player";
 const ROAD_LINE_LABEL: &str = "roadline";
 const OBSTACLE_LABEL: &str = "obstacle";
+const HEALTH_MSG_LABEL: &str = "health_message";
 
 const PLAYER_SPEED: f32 = 250.0;
 const ROAD_SPEED: f32 = 400.0;
@@ -19,6 +20,9 @@ fn main() {
     init_player(&mut game);
     init_road_lines(&mut game);
     init_obstacles(&mut game);
+
+    let health_message = game.add_text(HEALTH_MSG_LABEL, "Health: 5");
+    health_message.translation = Vec2::new(550.0, 320.0);
 
     game.audio_manager.play_music(MusicPreset::WhimsicalPopsicle, 0.2);
 
@@ -107,4 +111,15 @@ fn game_logic(engine: &mut Engine, game_state: &mut GameState) {
             }
         }
     }
+
+    let health_message = &mut engine.texts.get_mut(HEALTH_MSG_LABEL).unwrap();
+    engine.collision_events.drain(..)
+        .filter(|event| event.state.is_begin() || !event.pair.either_contains(PLAYER_LABEL))
+        .for_each(|event| {
+            if game_state.health > 0 {
+                game_state.health -= 1;
+                health_message.value = format!("Health: {}", game_state.health);
+                engine.audio_manager.play_sfx(SfxPreset::Impact2, 0.6);
+            }
+        });
 }
