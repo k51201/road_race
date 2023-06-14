@@ -3,7 +3,7 @@ use rusty_engine::game::{Engine, Game};
 use rusty_engine::prelude::Vec2;
 use rusty_engine::sprite::SpritePreset;
 
-use crate::{GameState, place_obstacle};
+use crate::{GameState, health_text, place_obstacle};
 use crate::constants::{HEALTH_MSG_LABEL, OBSTACLE_LABEL, PLAYER_LABEL, ROAD_LINE_LABEL};
 
 pub fn run_game(game_logic: fn(&mut Engine, &mut GameState)) {
@@ -22,11 +22,14 @@ fn init_game(mut game: &mut Game<GameState>) {
     init_player(game);
     init_road_lines(game);
     init_obstacles(game);
-
-    let health_message = game.add_text(HEALTH_MSG_LABEL, "Health: 5");
-    health_message.translation = Vec2::new(550.0, 320.0);
+    init_health_message(game);
 
     game.audio_manager.play_music(MusicPreset::WhimsicalPopsicle, 0.2);
+}
+
+fn init_health_message(game: &mut Game<GameState>) {
+    let health_message = game.add_text(HEALTH_MSG_LABEL, health_text(5));
+    health_message.translation = Vec2::new(550.0, 320.0);
 }
 
 fn init_obstacles(game: &mut Game<GameState>) {

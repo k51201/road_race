@@ -24,3 +24,7 @@ pub fn place_obstacle(obstacle: &mut Sprite) {
     obstacle.translation.x = thread_rng().gen_range(800.0..1600.0);
     obstacle.translation.y = thread_rng().gen_range(-300.0..300.0);
 }
+
+pub fn health_text(health: u8) -> String {
+    format!("Health: {}", health)
+}

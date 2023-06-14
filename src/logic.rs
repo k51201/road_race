@@ -2,7 +2,7 @@ use rusty_engine::audio::SfxPreset;
 use rusty_engine::game::Engine;
 use rusty_engine::keyboard::KeyCode;
 
-use crate::{GameState, place_obstacle};
+use crate::{GameState, health_text, place_obstacle};
 use crate::constants::{GAME_OVER_LABEL, HEALTH_MSG_LABEL, OBSTACLE_LABEL, PLAYER_LABEL, PLAYER_SPEED, ROAD_LINE_LABEL, ROAD_SPEED};
 
 pub fn game_logic(engine: &mut Engine, game_state: &mut GameState) {
@@ -32,7 +32,7 @@ fn handle_collisions(engine: &mut Engine, game_state: &mut GameState) {
         .for_each(|_| {
             if game_state.health > 0 {
                 game_state.health -= 1;
-                health_message.value = format!("Health: {}", game_state.health);
+                health_message.value = health_text(game_state.health);
                 engine.audio_manager.play_sfx(SfxPreset::Impact2, 0.6);
             }
         });
